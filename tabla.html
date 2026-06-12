@@ -165,22 +165,24 @@ function updSt(s){
   if(s==='chk'){el.textContent=(turn==='w'?'Beli':'Crni')+' je u šahu! ⚠️';el.style.color='#ff7675';return;}
   el.style.color='var(--accent)';el.textContent=(turn==='w'?'Beli':'Crni')+' je na potezu '+(turn==='w'?'♔':'♚');
 }
+function resetB(){initB();scaleBoard();}
+function flipB(){flipped=!flipped;render();}
+initB();
+
 function scaleBoard(){
   var outer=document.getElementById('boardOuter');
-  var container=outer.parentElement;
-  // prirodna širina table: 28px (ranks) + 8*52px (polja) = 444px
-  var naturalW=444;
-  var availW=container.clientWidth;
-  if(availW<naturalW){
+  var wrap=document.querySelector('.chess-wrap');
+  // resetuj scale da bismo izmerili prirodnu širinu
+  outer.style.transform='';
+  outer.parentElement.style.height='';
+  var naturalW=outer.offsetWidth;
+  var availW=wrap.clientWidth-38;
+  if(naturalW>0 && availW<naturalW){
     var scale=availW/naturalW;
+    var naturalH=outer.offsetHeight;
     outer.style.transform='scale('+scale+')';
     outer.style.transformOrigin='top left';
-    // postavljamo visinu kontejnera jer scale ne utiče na layout
-    var naturalH=outer.offsetHeight||444;
-    container.style.height=(naturalH*scale)+'px';
-  }else{
-    outer.style.transform='';
-    container.style.height='';
+    outer.parentElement.style.height=Math.round(naturalH*scale)+'px';
   }
 }
 window.addEventListener('resize',scaleBoard);
