@@ -7,6 +7,7 @@
 <style>
 .chess-wrap{background:var(--dark);border-radius:20px;padding:2.5rem;display:flex;gap:3rem;align-items:flex-start;flex-wrap:wrap}
 .board-container{flex-shrink:0}
+.board-outer{display:inline-block;transform-origin:top left}
 .board-info{flex:1;min-width:220px;color:rgba(255,255,255,.75)}
 .board-info h2{color:var(--accent);font-size:22px;font-weight:900;margin-bottom:.8rem}
 .board-info p{font-size:14px;line-height:1.7;margin-bottom:1rem}
@@ -19,6 +20,11 @@
 .mr{display:flex;gap:8px;margin-bottom:3px;font-size:13px}
 .mr .n{color:rgba(255,255,255,.3);min-width:24px}
 .mr .m{color:rgba(255,255,255,.75);min-width:58px}
+
+@media(max-width:700px){
+  .chess-wrap{padding:1.2rem;gap:1.5rem;flex-direction:column}
+  .board-info{min-width:0;width:100%}
+}
 </style>
 </head>
 <body>
@@ -34,10 +40,12 @@
   <div class="sec-title">♟ Igraj šah!</div>
   <div class="chess-wrap">
     <div class="board-container">
-      <div class="board-files" style="margin-left:28px"><span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span></div>
-      <div style="display:flex">
-        <div class="board-ranks"><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div>
-        <div id="chessboard"></div>
+      <div class="board-outer" id="boardOuter">
+        <div class="board-files" style="margin-left:28px"><span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span></div>
+        <div style="display:flex">
+          <div class="board-ranks"><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div>
+          <div id="chessboard"></div>
+        </div>
       </div>
     </div>
     <div class="board-info">
@@ -157,9 +165,27 @@ function updSt(s){
   if(s==='chk'){el.textContent=(turn==='w'?'Beli':'Crni')+' je u šahu! ⚠️';el.style.color='#ff7675';return;}
   el.style.color='var(--accent)';el.textContent=(turn==='w'?'Beli':'Crni')+' je na potezu '+(turn==='w'?'♔':'♚');
 }
-function resetB(){initB();}
-function flipB(){flipped=!flipped;render();}
-initB();
+function scaleBoard(){
+  var outer=document.getElementById('boardOuter');
+  var container=outer.parentElement;
+  // prirodna širina table: 28px (ranks) + 8*52px (polja) = 444px
+  var naturalW=444;
+  var availW=container.clientWidth;
+  if(availW<naturalW){
+    var scale=availW/naturalW;
+    outer.style.transform='scale('+scale+')';
+    outer.style.transformOrigin='top left';
+    // postavljamo visinu kontejnera jer scale ne utiče na layout
+    var naturalH=outer.offsetHeight||444;
+    container.style.height=(naturalH*scale)+'px';
+  }else{
+    outer.style.transform='';
+    container.style.height='';
+  }
+}
+window.addEventListener('resize',scaleBoard);
+scaleBoard();
+
 </script>
 </body>
 </html>
