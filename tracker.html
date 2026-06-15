@@ -103,14 +103,25 @@
 
 /* ── Responsive ───────────────────────────────────────── */
 @media(max-width:700px){
-  .tr{padding:1rem 1rem 2rem}
+  .tr{padding:.8rem .8rem 2rem}
+  .tr-filters{padding:1rem 1rem}
   .tr-fg{grid-template-columns:1fr 1fr}
   .tr-sbtn{grid-column:1/-1}
-  .tr-prow{grid-template-columns:26px 1fr auto;grid-template-rows:auto auto}
+  .tr-prow{grid-template-columns:24px 1fr auto;grid-template-rows:auto auto}
   .tr-plbtn.bl{grid-column:2/4;text-align:left;border-top:.5px solid var(--border);padding-top:7px;margin-top:4px}
-  .tr-plrow{grid-template-columns:36px 1fr 48px 40px}
-  .tr-grow{grid-template-columns:50px 1fr 44px 52px;font-size:12px}
-  .tr-dtitle{font-size:18px}
+  .tr-plbtn:not(:disabled) strong::after{content:''} /* remove arrow on mobile */
+  .tr-plrow{grid-template-columns:34px 1fr 44px 38px}
+  .tr-grow{grid-template-columns:46px 1fr 40px 48px;font-size:12px;padding:8px 10px}
+  .tr-dtitle{font-size:17px}
+  .tr-dcard{padding:1rem}
+  .tr-rb{padding:5px 10px;font-size:12px}
+  .tr-sub{font-size:11px}
+  .tr-games{font-size:12px}
+  .sec-title{font-size:13px}
+}
+@media(max-width:400px){
+  .tr-fg{grid-template-columns:1fr}
+  .tr-sbtn{grid-column:1}
 }
 </style>
 </head>
