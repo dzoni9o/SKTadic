@@ -6,8 +6,8 @@
   function ri(a,b){return a+Math.floor(Math.random()*(b-a+1));}
   function rf(a,b){return a+Math.random()*(b-a);}
   function spawn(delay){
-    var size=isD?ri(60,110):ri(20,36);
-    var op=isD?rf(0.12,0.22):rf(0.06,0.13);
+    var size=isD?ri(90,160):ri(30,52);
+    var op=isD?rf(0.22,0.38):rf(0.12,0.22);
     var dur=isD?rf(2200,4500):rf(900,1800);
     var pause=rf(500,1800);
     var total=ri(4,9);
