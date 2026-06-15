@@ -7,15 +7,116 @@
 <title>Turnirski Tracker — ŠK Tadić</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Pregled sahovskih turnira sa chess-results.com — parovi kola, kartice igraca, rezultati po datumu.">
+<meta name="description" content="Pregled sahovskih turnira sa chess-results.com — parovi kola, kartice igraca, rezultati.">
 <style>
-body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.tracker-frame{flex:1;position:relative;z-index:2;overflow:hidden}
-.tracker-frame iframe{width:100%;height:100%;border:none;display:block}
+/* ── Tracker layout ───────────────────────────────────── */
+.tr{max-width:960px;margin:0 auto;padding:2rem 2rem 3rem;position:relative;z-index:2}
+
+/* ── Filter panel ─────────────────────────────────────── */
+.tr-filters{background:var(--surface);border-radius:16px;padding:1.4rem 1.6rem;border:.5px solid var(--border);margin-bottom:1.5rem;box-shadow:var(--shadow)}
+.tr-fg{display:grid;grid-template-columns:repeat(4,1fr) auto;gap:10px;align-items:end}
+.tr-fg label{display:grid;gap:5px;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.tr-fg select,.tr-fg input[type=date]{height:40px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--light);padding:0 10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;outline:none;transition:border .2s}
+.tr-fg select:focus,.tr-fg input:focus{border-color:var(--accent)}
+.tr-sbtn{height:40px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0 22px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;transition:background .2s}
+.tr-sbtn:hover{background:#d4b05a}.tr-sbtn:disabled{opacity:.55;cursor:not-allowed}
+
+/* ── Cards / Lists ────────────────────────────────────── */
+.tr-list{display:grid;gap:8px}
+.tr-tcard{background:var(--surface);border-radius:12px;padding:14px 16px;border:.5px solid var(--border);cursor:pointer;width:100%;text-align:left;font-family:'Nunito',sans-serif;transition:all .18s;display:grid;gap:4px}
+.tr-tcard:hover{border-color:var(--accent);transform:translateX(3px);box-shadow:var(--shadow)}
+.tr-tid{font-size:11px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.4px}
+.tr-tname{font-size:15px;font-weight:800;color:var(--light);line-height:1.3}
+.tr-tcity{font-size:12px;color:var(--muted);font-weight:600}
+.tr-tmeta{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
+.tr-pill{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(30,48,85,.07);color:var(--muted);border:.5px solid var(--border)}
+
+/* ── Back button ──────────────────────────────────────── */
+.tr-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;border:.5px solid var(--border);background:var(--surface);padding:7px 14px;border-radius:8px;margin-bottom:1rem;font-family:'Nunito',sans-serif;transition:all .2s}
+.tr-back:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── Detail card (tournament header / player header) ──── */
+.tr-dcard{background:var(--surface);border-radius:16px;padding:1.4rem 1.6rem;border:.5px solid var(--border);margin-bottom:1rem;box-shadow:var(--shadow)}
+.tr-dtag{font-size:11px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem}
+.tr-dtitle{font-size:22px;font-weight:900;color:var(--light);line-height:1.2;margin-bottom:.5rem}
+.tr-dmeta{display:flex;gap:5px;flex-wrap:wrap}
+
+/* ── Round + Players tabs ─────────────────────────────── */
+.tr-rounds{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.tr-rb{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .18s}
+.tr-rb:hover{border-color:var(--accent);color:var(--accent)}
+.tr-rb.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.tr-rb.players-tab{border-color:rgba(30,48,85,.3);color:var(--light)}
+.tr-rb.players-tab.on{background:var(--light);border-color:var(--light);color:#fff}
+
+/* ── Pairings ─────────────────────────────────────────── */
+.tr-plist{display:grid;gap:7px}
+.tr-prow{display:grid;grid-template-columns:32px 1fr auto 1fr;gap:8px;align-items:center;background:var(--surface);border:.5px solid var(--border);border-radius:10px;padding:10px 12px}
+.tr-bno{font-size:11px;font-weight:900;color:var(--accent);text-align:center}
+.tr-plbtn{border:none;background:transparent;color:var(--light);padding:0;font-family:'Nunito',sans-serif;cursor:pointer;text-align:left;display:grid;gap:2px;min-width:0}
+.tr-plbtn.bl{text-align:right}
+.tr-plbtn strong{font-size:13px;font-weight:800;line-height:1.3;overflow-wrap:anywhere}
+.tr-plbtn span{font-size:11px;color:var(--muted);font-weight:600}
+.tr-plbtn:disabled{cursor:default;opacity:.7}
+.tr-plbtn:not(:disabled):hover strong{color:var(--accent);text-decoration:underline}
+.tr-plbtn:not(:disabled) strong::after{content:' ↗';font-size:9px;opacity:.5}
+.tr-res{display:inline-flex;align-items:center;justify-content:center;min-width:50px;padding:5px 4px;border-radius:6px;font-size:12px;font-weight:900;border:.5px solid var(--border);color:var(--muted);flex-shrink:0}
+.tr-res.w{color:#2d6a2d;border-color:rgba(46,125,50,.3);background:rgba(46,125,50,.09)}
+.tr-res.l{color:#b71c1c;border-color:rgba(183,28,28,.3);background:rgba(183,28,28,.08)}
+.tr-res.d{color:var(--gold-dim);border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.1)}
+
+/* ── Player list (start list) ─────────────────────────── */
+.tr-plrow{display:grid;grid-template-columns:44px 1fr 60px 44px;gap:8px;align-items:center;background:var(--surface);border:.5px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s}
+.tr-plrow:hover{border-color:var(--accent);background:rgba(201,168,76,.06)}
+.tr-plrow:hover .tr-plrow-name{color:var(--accent)}
+.tr-plrow-snr{font-size:12px;font-weight:900;color:var(--accent);text-align:center}
+.tr-plrow-name{font-size:14px;font-weight:800;color:var(--light)}
+.tr-plrow-title{font-size:12px;font-weight:700;color:var(--muted)}
+.tr-plrow-elo{font-size:13px;font-weight:700;color:var(--muted);text-align:right}
+
+/* ── Player stats ─────────────────────────────────────── */
+.tr-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem}
+.tr-stat{border:.5px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.tr-stat strong{display:block;font-size:22px;font-weight:900;color:var(--accent);margin-bottom:2px}
+.tr-stat span{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+
+/* ── Player game rows ─────────────────────────────────── */
+.tr-games{background:var(--surface);border-radius:12px;border:.5px solid var(--border);overflow:hidden}
+.tr-grow{display:grid;grid-template-columns:58px 1fr 52px 58px;gap:8px;align-items:center;padding:10px 14px;border-bottom:.5px solid var(--border);font-size:13px;cursor:pointer;transition:background .12s}
+.tr-grow:last-child{border-bottom:none}
+.tr-grow:hover{background:var(--mid)}
+.tr-gkolo{color:var(--muted);font-size:11px;font-weight:700}
+.tr-gopp{font-weight:700;color:var(--light)}
+.tr-gelo{color:var(--muted);font-size:12px;text-align:center}
+
+/* ── States ───────────────────────────────────────────── */
+.tr-empty{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:2.5rem;text-align:center}
+.tr-empty h3{font-size:16px;font-weight:800;color:var(--light);margin-bottom:.4rem}
+.tr-empty p{font-size:13px;color:var(--muted)}
+.tr-err{background:rgba(183,28,28,.06);border:.5px solid rgba(183,28,28,.25);border-radius:10px;padding:1rem 1.2rem;color:#b71c1c;font-size:14px;font-weight:600;margin-bottom:1rem}
+.tr-spin-wrap{display:flex;align-items:center;gap:10px;padding:1.6rem;color:var(--muted);font-weight:600;font-size:14px}
+.tr-spin{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:trSpin 1s linear infinite;flex-shrink:0}
+@keyframes trSpin{to{transform:rotate(360deg)}}
+
+/* ── Section subtitle ─────────────────────────────────── */
+.tr-sub{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:1.2rem 0 .6rem}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media(max-width:700px){
+  .tr{padding:1rem 1rem 2rem}
+  .tr-fg{grid-template-columns:1fr 1fr}
+  .tr-sbtn{grid-column:1/-1}
+  .tr-prow{grid-template-columns:26px 1fr auto;grid-template-rows:auto auto}
+  .tr-plbtn.bl{grid-column:2/4;text-align:left;border-top:.5px solid var(--border);padding-top:7px;margin-top:4px}
+  .tr-plrow{grid-template-columns:36px 1fr 48px 40px}
+  .tr-grow{grid-template-columns:50px 1fr 44px 52px;font-size:12px}
+  .tr-dtitle{font-size:18px}
+}
 </style>
 </head>
 <body>
 <div class="pieces-layer" id="pl"></div>
+
 <nav>
   <a href="index.html" class="nav-logo"><span class="knight">♞</span><span>ŠK Tadić</span></a>
   <div class="nav-links">
@@ -39,19 +140,487 @@ body{display:flex;flex-direction:column;height:100vh;overflow:hidden}
   <a href="kontakt.html">📬 Kontakt</a>
 </div>
 
-<div class="tracker-frame">
-  <iframe id="trackerIframe" src="" title="Chess Tracker — chess-results.com" allowfullscreen></iframe>
-</div>
+<div class="breadcrumb"><a href="index.html">Početna</a><span>›</span>Turnirski Tracker</div>
+
+<div class="tr" id="trApp"></div>
+
+<footer>♛ <a href="index.html">Šah Klub Tadić</a> · Borivoja Stevanovića 51, Beograd · <a href="mailto:sahklubtadic@gmail.com">sahklubtadic@gmail.com</a> · 2026.</footer>
 
 <script src="nav.js"></script>
 <script src="pieces.js"></script>
 <script>
-// localhost → lokalni dev server; sve ostalo → produkcija na Vercelu
-var host = window.location.hostname;
-var trackerSrc = (host === 'localhost' || host === '127.0.0.1')
+(function(){
+'use strict';
+
+var API = (location.hostname==='localhost'||location.hostname==='127.0.0.1')
   ? 'http://localhost:3000'
   : 'https://chesstracker.vercel.app';
-document.getElementById('trackerIframe').src = trackerSrc;
+
+var COUNTRIES=[
+  ['SRB','Srbija'],['CRO','Hrvatska'],['BIH','Bosna i Hercegovina'],['MNE','Crna Gora'],
+  ['MKD','Makedonija'],['SVN','Slovenija'],['GER','Nemačka'],['AUT','Austrija'],
+  ['HUN','Mađarska'],['ROU','Rumunija'],['BUL','Bugarska'],['GRE','Grčka'],
+  ['TUR','Turska'],['POL','Poljska'],['RUS','Rusija'],['UKR','Ukrajina'],
+  ['FRA','Francuska'],['ITA','Italija'],['ESP','Španija'],['NED','Holandija'],
+  ['CZE','Češka'],['SVK','Slovačka'],['USA','SAD'],['IND','Indija'],['CHN','Kina']
+];
+
+var SELS=[
+  ['0','Svi turniri'],
+  ['4','Završeni u poslednjih 7 dana'],
+  ['5','Stariji završeni turniri'],
+  ['7','Poslednjih 10 nedelja sa partijama']
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+var S={
+  view:'list',
+  fed:'SRB', sel:'0', from:'', to:'',
+  tournaments:[], searched:false, loading:false, err:'',
+  tnr:null,           // current TournamentListItem
+  detail:null,        // TournamentDetail
+  tab:'r1',           // 'r1'..'rN' | 'players'
+  round:1,
+  roundData:null,     // RoundData
+  roundLoading:false,
+  // player list (start list)
+  playerList:null,    // TournamentPlayerRow[] | null
+  playerListLoading:false,
+  // name→SNR lookup cache (populated when playerList loads)
+  snrByName:{},       // {normalizedName: snr}
+  playerSnr:0,
+  player:null,        // PlayerCard
+  playerLoading:false
+};
+
+var $app=document.getElementById('trApp');
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function ce(tag,cls){var e=document.createElement(tag);if(cls)e.className=cls;return e;}
+function txt(el,t){el.textContent=t;return el;}
+
+function halfFix(r){
+  if(!r)return r;
+  return r.replace(/Â½/g,'½').replace(/1\/2-1\/2/g,'½-½').replace(/1\/2/g,'½');
+}
+function resCls(r){
+  var v=halfFix(r);
+  if(v==='1-0'||v==='1')return 'w';
+  if(v==='0-1'||v==='0')return 'l';
+  if(v==='½-½'||v==='½')return 'd';
+  return '';
+}
+function resLbl(r){
+  if(!r)return '...';
+  return halfFix(r)||'...';
+}
+
+function normName(n){
+  return String(n||'').toLowerCase().replace(/\s+/g,' ').trim();
+}
+
+async function api(path){
+  var r=await fetch(API+path);
+  var j=await r.json();
+  if(!j.ok)throw new Error(j.error||'API greška');
+  return j.data;
+}
+
+function spinner(msg){
+  var w=ce('div','tr-spin-wrap');
+  w.innerHTML='<div class="tr-spin"></div>';
+  w.appendChild(txt(ce('span'),msg||'Učitavanje...'));
+  return w;
+}
+
+function errBox(msg){
+  return txt(ce('div','tr-err'),'⚠ '+msg);
+}
+
+function pill(t){return txt(ce('span','tr-pill'),t);}
+
+// Look up SNR by player name (falls back to 0)
+function snrFor(name){
+  return S.snrByName[normName(name)]||0;
+}
+
+// ── Render dispatcher ─────────────────────────────────────────────────────────
+function render(){
+  $app.innerHTML='';
+  if(S.view==='list')renderList();
+  else if(S.view==='tournament')renderTournament();
+  else if(S.view==='player')renderPlayer();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// VIEW 1 — Lista turnira
+// ════════════════════════════════════════════════════════════════════════════
+function renderList(){
+  var fc=ce('div','tr-filters');
+  var fg=ce('div','tr-fg');
+
+  var lc=ce('label');lc.appendChild(txt(ce('span'),'Zemlja'));
+  var sc=ce('select');
+  COUNTRIES.forEach(function(c){
+    var o=ce('option');o.value=c[0];o.textContent=c[1]+' ('+c[0]+')';
+    if(c[0]===S.fed)o.selected=true;
+    sc.appendChild(o);
+  });
+  sc.onchange=function(){S.fed=this.value;};
+  lc.appendChild(sc);fg.appendChild(lc);
+
+  var ls=ce('label');ls.appendChild(txt(ce('span'),'Prikaz'));
+  var ss=ce('select');
+  SELS.forEach(function(s){
+    var o=ce('option');o.value=s[0];o.textContent=s[1];
+    if(s[0]===S.sel)o.selected=true;
+    ss.appendChild(o);
+  });
+  ss.onchange=function(){S.sel=this.value;};
+  ls.appendChild(ss);fg.appendChild(ls);
+
+  var lf=ce('label');lf.appendChild(txt(ce('span'),'Od'));
+  var inf=ce('input');inf.type='date';inf.value=S.from;
+  inf.oninput=function(){S.from=this.value;};
+  lf.appendChild(inf);fg.appendChild(lf);
+
+  var lt=ce('label');lt.appendChild(txt(ce('span'),'Do'));
+  var int_=ce('input');int_.type='date';int_.value=S.to;
+  int_.oninput=function(){S.to=this.value;};
+  lt.appendChild(int_);fg.appendChild(lt);
+
+  var btn=ce('button','tr-sbtn');
+  btn.textContent=S.loading?'Tražim...':'Pretraži';
+  btn.disabled=S.loading;
+  btn.onclick=doSearch;
+  fg.appendChild(btn);
+
+  fc.appendChild(fg);$app.appendChild(fc);
+
+  if(S.err)$app.appendChild(errBox(S.err));
+  if(S.loading){$app.appendChild(spinner('Tražim turnire...'));return;}
+  if(!S.searched)return;
+
+  var rh=ce('div','sec-title');rh.textContent=S.tournaments.length+' turnira';
+  $app.appendChild(rh);
+
+  if(S.tournaments.length===0){
+    var em=ce('div','tr-empty');
+    em.innerHTML='<h3>Nema turnira</h3><p>Promeni parametre pretrage i pokušaj ponovo.</p>';
+    $app.appendChild(em);return;
+  }
+
+  var list=ce('div','tr-list');
+  S.tournaments.forEach(function(t){
+    var c=ce('button','tr-tcard');
+    c.appendChild(txt(ce('div','tr-tid'),'ID '+t.id));
+    c.appendChild(txt(ce('div','tr-tname'),t.name));
+    if(t.city||t.country)c.appendChild(txt(ce('div','tr-tcity'),t.city||t.country));
+    var meta=ce('div','tr-tmeta');
+    var dateStr=t.dateFrom||(t.dateTo?'-'+t.dateTo:'');
+    if(t.dateTo&&t.dateTo!==t.dateFrom)dateStr+=' – '+t.dateTo;
+    if(dateStr)meta.appendChild(pill('📅 '+dateStr));
+    if(t.rounds)meta.appendChild(pill(t.rounds+' kola'));
+    if(t.players)meta.appendChild(pill(t.players+' igrača'));
+    c.appendChild(meta);
+    c.onclick=(function(item){return function(){openTournament(item);};})(t);
+    list.appendChild(c);
+  });
+  $app.appendChild(list);
+}
+
+async function doSearch(){
+  S.loading=true;S.err='';S.searched=true;render();
+  try{
+    var p=new URLSearchParams({fed:S.fed,selection:S.sel});
+    if(S.from)p.set('from',S.from);
+    if(S.to)p.set('to',S.to);
+    S.tournaments=await api('/api/v1/tournaments?'+p);
+  }catch(e){S.err=e.message;S.tournaments=[];}
+  S.loading=false;render();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// VIEW 2 — Turnir (kola + parovi + lista igrača)
+// ════════════════════════════════════════════════════════════════════════════
+function openTournament(item){
+  S.view='tournament';S.tnr=item;S.detail=null;
+  S.tab='r1';S.round=1;S.roundData=null;S.err='';
+  S.playerList=null;S.snrByName={};
+  render();
+  var fed=(item.country||S.fed);
+  api('/api/v1/tournaments/'+item.id+'?fed='+fed).then(function(d){
+    S.detail=d;
+    var rds=Math.max(d.rounds||0,item.rounds||0);
+    render();
+    if(rds>0)loadRound(1);
+    // Start loading player list in background for name→SNR lookup
+    loadPlayerList(false);
+  }).catch(function(e){S.err=e.message;render();});
+}
+
+function renderTournament(){
+  var item=S.tnr||{};
+  var detail=S.detail;
+  var fed=item.country||S.fed;
+  var rdsTotal=Math.max((detail&&detail.rounds)||0,(item.rounds||0));
+
+  var back=ce('button','tr-back');
+  back.innerHTML='← Pretraga';
+  back.onclick=function(){S.view='list';S.err='';render();};
+  $app.appendChild(back);
+
+  var dc=ce('div','tr-dcard');
+  dc.appendChild(txt(ce('div','tr-dtag'),'Turnir · '+fed));
+  var name=(detail&&detail.name)||item.name||('Turnir '+item.id);
+  dc.appendChild(txt(ce('div','tr-dtitle'),name));
+  var dm=ce('div','tr-dmeta');
+  var d1=item.dateFrom,d2=item.dateTo;
+  if(d1){var ds=d1+(d2&&d2!==d1?' – '+d2:'');dm.appendChild(pill('📅 '+ds));}
+  if(detail&&detail.lastUpdate)dm.appendChild(pill('🕐 '+detail.lastUpdate));
+  if(rdsTotal)dm.appendChild(pill(rdsTotal+' kola'));
+  if(item.players)dm.appendChild(pill(item.players+' igrača'));
+  dc.appendChild(dm);$app.appendChild(dc);
+
+  if(S.err)$app.appendChild(errBox(S.err));
+
+  if(!detail){$app.appendChild(spinner('Učitavam turnir...'));return;}
+
+  // Tabs: rounds + Igrači
+  var rs=ce('div','tr-rounds');
+
+  // Players tab
+  var ptab=ce('button','tr-rb players-tab'+(S.tab==='players'?' on':''));
+  ptab.textContent='♟ Igrači';
+  ptab.onclick=function(){
+    S.tab='players';S.err='';render();
+    if(!S.playerList&&!S.playerListLoading)loadPlayerList(true);
+  };
+  rs.appendChild(ptab);
+
+  // Round tabs
+  for(var r=1;r<=rdsTotal;r++){
+    var rb=ce('button','tr-rb'+(S.tab==='r'+r?' on':''));
+    rb.textContent='Kolo '+r;
+    rb.onclick=(function(rd){return function(){
+      if(S.tab==='r'+rd)return;
+      S.tab='r'+rd;S.round=rd;S.roundData=null;S.err='';render();loadRound(rd);
+    };})(r);
+    rs.appendChild(rb);
+  }
+  $app.appendChild(rs);
+
+  if(S.tab==='players'){
+    renderPlayerList();
+  } else {
+    renderRoundView(rdsTotal);
+  }
+}
+
+function renderRoundView(rdsTotal){
+  if(rdsTotal===0){
+    var em=ce('div','tr-empty');
+    em.innerHTML='<h3>Nema objavljenih rezultata</h3><p>Chess-Results još nema unetih parova za ovaj turnir.</p>';
+    $app.appendChild(em);return;
+  }
+  if(S.roundLoading||!S.roundData){
+    $app.appendChild(spinner('Učitavam kolo '+S.round+'...'));return;
+  }
+
+  var rd=S.roundData;
+  var ph=ce('div','sec-title');
+  ph.textContent='Kolo '+rd.round+(rd.date?' · '+rd.date:'')+' — '+rd.pairings.length+' partija';
+  $app.appendChild(ph);
+
+  if(rd.pairings.length===0){
+    var ep=ce('div','tr-empty');ep.innerHTML='<h3>Nema parova</h3><p>Chess-Results nije vratio tabelu za ovo kolo.</p>';
+    $app.appendChild(ep);return;
+  }
+
+  var pl=ce('div','tr-plist');
+  rd.pairings.forEach(function(p){
+    var row=ce('div','tr-prow');
+    txt(row.appendChild(ce('div','tr-bno')),p.board);
+
+    // Resolve SNR: use whiteNo if non-zero, else lookup by name
+    var wSnr=p.whiteNo||snrFor(p.whiteName);
+    var bSnr=p.blackNo||snrFor(p.blackName);
+
+    var wb=ce('button','tr-plbtn');
+    wb.innerHTML='<strong>'+esc(p.whiteName||'-')+'</strong><span>'+esc((p.whiteTitle?p.whiteTitle+' ':'')+((p.whiteElo>0)?p.whiteElo:''))+'</span>';
+    wb.disabled=!wSnr;
+    if(wSnr)wb.onclick=(function(sn){return function(){openPlayer(sn);};})(wSnr);
+    row.appendChild(wb);
+
+    var res=ce('div','tr-res '+resCls(p.result));res.textContent=resLbl(p.result);
+    row.appendChild(res);
+
+    var bb=ce('button','tr-plbtn bl');
+    bb.innerHTML='<strong>'+esc(p.blackName||'-')+'</strong><span>'+esc((p.blackTitle?p.blackTitle+' ':'')+((p.blackElo>0)?p.blackElo:''))+'</span>';
+    bb.disabled=!bSnr;
+    if(bSnr)bb.onclick=(function(sn){return function(){openPlayer(sn);};})(bSnr);
+    row.appendChild(bb);
+
+    pl.appendChild(row);
+  });
+  $app.appendChild(pl);
+}
+
+function renderPlayerList(){
+  if(S.playerListLoading||!S.playerList){
+    $app.appendChild(spinner('Učitavam listu igrača...'));return;
+  }
+  if(S.playerList.length===0){
+    var em=ce('div','tr-empty');em.innerHTML='<h3>Nema podataka</h3><p>Startna lista nije dostupna za ovaj turnir.</p>';
+    $app.appendChild(em);return;
+  }
+
+  var ph=ce('div','sec-title');ph.textContent=S.playerList.length+' igrača';
+  $app.appendChild(ph);
+
+  var list=ce('div','tr-list');
+  S.playerList.forEach(function(p){
+    var row=ce('div','tr-plrow');
+    txt(row.appendChild(ce('div','tr-plrow-snr')),'#'+p.snr);
+    var nameEl=ce('div','tr-plrow-name');nameEl.textContent=p.name;
+    row.appendChild(nameEl);
+    txt(row.appendChild(ce('div','tr-plrow-title')),p.title||'');
+    txt(row.appendChild(ce('div','tr-plrow-elo')),p.elo>0?p.elo:'');
+    row.onclick=(function(snr){return function(){openPlayer(snr);};})(p.snr);
+    list.appendChild(row);
+  });
+  $app.appendChild(list);
+}
+
+function loadRound(rd){
+  S.roundLoading=true;
+  var item=S.tnr;
+  var fed=(item&&item.country)||S.fed;
+  api('/api/v1/tournaments/'+item.id+'/rounds/'+rd+'?fed='+fed).then(function(data){
+    if(S.round===rd){S.roundData=data;S.roundLoading=false;render();}
+  }).catch(function(e){
+    if(S.round===rd){S.err=e.message;S.roundLoading=false;render();}
+  });
+}
+
+function loadPlayerList(andRender){
+  S.playerListLoading=true;
+  if(andRender)render();
+  var item=S.tnr;
+  var fed=(item&&item.country)||S.fed;
+  api('/api/v1/tournaments/'+item.id+'/players?fed='+fed).then(function(data){
+    S.playerList=data;
+    S.playerListLoading=false;
+    // Build name→SNR lookup
+    var map={};
+    data.forEach(function(p){map[normName(p.name)]=p.snr;});
+    S.snrByName=map;
+    render();
+  }).catch(function(e){
+    S.playerListLoading=false;
+    if(andRender){S.err=e.message;render();}
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// VIEW 3 — Kartica igrača
+// ════════════════════════════════════════════════════════════════════════════
+function openPlayer(snr){
+  S.view='player';S.playerSnr=snr;S.player=null;S.err='';
+  render();
+  var item=S.tnr;
+  var fed=(item&&item.country)||S.fed;
+  var p=new URLSearchParams({fed:fed});
+  var yr=(S.from||S.to||'').slice(0,4);
+  if(/^\d{4}$/.test(yr)){p.set('historyFrom',yr+'-01-01');p.set('historyTo',new Date().toISOString().slice(0,10));}
+  api('/api/v1/players/'+item.id+'/'+snr+'?'+p).then(function(data){
+    if(S.playerSnr===snr){S.player=data;render();}
+  }).catch(function(e){
+    if(S.playerSnr===snr){S.err=e.message;render();}
+  });
+}
+
+function renderPlayer(){
+  var back=ce('button','tr-back');
+  back.innerHTML='← Turnir';
+  back.onclick=function(){S.view='tournament';S.err='';render();};
+  $app.appendChild(back);
+
+  if(S.err)$app.appendChild(errBox(S.err));
+  if(!S.player){$app.appendChild(spinner('Učitavam igrača #'+S.playerSnr+'...'));return;}
+
+  var c=S.player;
+  var wins=c.results.filter(function(r){return r.result==='1';}).length;
+  var draws=c.results.filter(function(r){return r.result==='½';}).length;
+  var losses=c.results.filter(function(r){return r.result==='0';}).length;
+
+  var dc=ce('div','tr-dcard');
+  dc.appendChild(txt(ce('div','tr-dtag'),'Igrac #'+S.playerSnr));
+  dc.appendChild(txt(ce('div','tr-dtitle'),c.name));
+  var dm=ce('div','tr-dmeta');
+  if(c.fed)dm.appendChild(pill(c.fed));
+  if(c.title)dm.appendChild(pill(c.title));
+  if(c.elo>0)dm.appendChild(pill('ELO '+c.elo));
+  if(c.fideId)dm.appendChild(pill('FIDE '+c.fideId));
+  if(c.rank>0)dm.appendChild(pill('Plasman '+c.rank));
+  dm.appendChild(pill(c.points+' poena'));
+  dc.appendChild(dm);
+
+  var stats=ce('div','tr-stats');
+  stats.innerHTML=
+    '<div class="tr-stat"><strong>'+wins+'</strong><span>Pobede</span></div>'+
+    '<div class="tr-stat"><strong>'+draws+'</strong><span>Remiji</span></div>'+
+    '<div class="tr-stat"><strong>'+losses+'</strong><span>Porazi</span></div>';
+  dc.appendChild(stats);
+  $app.appendChild(dc);
+
+  if(c.results.length>0){
+    $app.appendChild(txt(ce('div','tr-sub'),'Partije po kolima ('+c.results.length+')'));
+    var games=ce('div','tr-games');
+    c.results.forEach(function(g){
+      var row=ce('div','tr-grow');
+      row.appendChild(txt(ce('span','tr-gkolo'),'Kolo '+g.round));
+      var oppEl=ce('span','tr-gopp');
+      oppEl.textContent=(g.oppName||'-')+(g.oppTitle?' ('+g.oppTitle+')':'');
+      row.appendChild(oppEl);
+      row.appendChild(txt(ce('span','tr-gelo'),g.oppElo>0?g.oppElo:'-'));
+      var res=ce('span','tr-res '+resCls(g.result));res.textContent=resLbl(g.result);
+      row.appendChild(res);
+      // Click on opponent to open their card
+      var oppSnr=g.oppNo||snrFor(g.oppName);
+      if(oppSnr){
+        row.title='Klikni za karticu protivnika';
+        row.onclick=(function(sn){return function(){openPlayer(sn);};})(oppSnr);
+      }
+      games.appendChild(row);
+    });
+    $app.appendChild(games);
+  }
+
+  if(c.tournaments&&c.tournaments.length>0){
+    $app.appendChild(txt(ce('div','tr-sub'),'Ostali turniri ('+c.tournaments.length+')'));
+    var tl=ce('div','tr-list');
+    c.tournaments.forEach(function(t){
+      var card=ce('button','tr-tcard');
+      card.appendChild(txt(ce('div','tr-tid'),'ID '+t.id));
+      card.appendChild(txt(ce('div','tr-tname'),t.name));
+      var meta=ce('div','tr-tmeta');
+      if(t.dateFrom)meta.appendChild(pill('📅 '+t.dateFrom+(t.dateTo&&t.dateTo!==t.dateFrom?' – '+t.dateTo:'')));
+      if(t.rounds)meta.appendChild(pill(t.rounds+' kola'));
+      card.appendChild(meta);
+      card.onclick=(function(item){return function(){openTournament(item);};})(t);
+      tl.appendChild(card);
+    });
+    $app.appendChild(tl);
+  }
+}
+
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+render();
+})();
 </script>
 </body>
 </html>
