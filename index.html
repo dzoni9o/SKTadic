@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="sr">
 <head>
 <meta charset="UTF-8">
@@ -6,42 +6,45 @@
 <meta name="referrer" content="no-referrer">
 <title>Šah Klub Tadić — Početna</title>
 <link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="description" content="Sahovska skola Tadic — nastava po programu GM Branka Tadica za decu 7-16 godina. Upis tokom cele godine, Beograd, Medakovic III.">
 <style>
-.hero{background:var(--dark);padding:4rem 2rem 0;position:relative;overflow:hidden;min-height:340px;display:flex;align-items:flex-end}
-.hero-bg{position:absolute;top:0;right:0;width:50%;height:100%;opacity:.04;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr)}
-.hero-bg span.d{background:#fff}
-.hero-content{position:relative;z-index:2;max-width:600px;padding-bottom:3rem}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(247,183,49,.15);border:1px solid rgba(247,183,49,.35);border-radius:20px;padding:5px 14px;margin-bottom:1.2rem}
-.hero-badge span{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
-.hero h1{color:#fff;font-size:46px;font-weight:900;line-height:1.1;margin-bottom:1rem}
+.hero{background:var(--bg);padding:1.2rem 2rem 0;position:relative;overflow:hidden;display:flex;align-items:flex-end;z-index:2}
+.hero-bg{position:absolute;top:0;right:0;width:50%;height:100%;opacity:.03;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr)}
+.hero-bg span.d{background:var(--accent)}
+.hero-content{position:relative;z-index:2;max-width:600px;padding-bottom:.9rem}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:4px 12px;margin-bottom:.6rem}
+.hero-badge span{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
+.hero h1{color:var(--light);font-size:30px;font-weight:900;line-height:1.15;margin-bottom:.5rem}
 .hero h1 em{color:var(--accent);font-style:normal}
-.hero p{color:rgba(255,255,255,.62);font-size:15px;line-height:1.75;margin-bottom:1.8rem;max-width:480px}
+.hero p{color:var(--muted);font-size:14px;line-height:1.65;margin-bottom:.9rem;max-width:480px}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.stats-bar{background:var(--accent);display:flex;justify-content:center;flex-wrap:wrap}
-.stat-item{padding:14px 32px;text-align:center;border-right:1px solid rgba(0,0,0,.1)}
+.stats-bar{background:var(--surface);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);display:flex;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
+.stat-item{padding:14px 32px;text-align:center;border-right:0.5px solid var(--border)}
 .stat-item:last-child{border-right:none}
-.stat-num{font-size:24px;font-weight:900;color:var(--dark)}
-.stat-lbl{font-size:11px;font-weight:700;color:rgba(26,26,46,.6);text-transform:uppercase;letter-spacing:.5px}
+.stat-num{font-size:24px;font-weight:900;color:var(--accent)}
+.stat-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 .news-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
-.news-main-img{width:100%;height:220px;object-fit:cover;display:block;background:var(--mid)}
-.news-main-ph{width:100%;height:220px;background:linear-gradient(135deg,var(--dark),#6c5ce7);display:flex;align-items:center;justify-content:center;font-size:72px;position:relative}
-.news-body{padding:1.2rem 1.4rem}
+.news-main-img{width:100%;height:220px;object-fit:cover;display:block}
+.news-main-ph{width:100%;height:220px;background:var(--mid);display:flex;align-items:center;justify-content:center;font-size:72px;position:relative}
+.news-body{padding:1.2rem 1.4rem;background:var(--surface)}
 .news-date{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px}
-.news-title{font-size:17px;font-weight:800;color:var(--dark);line-height:1.4;margin-bottom:8px}
-.news-excerpt{font-size:13.5px;color:#555;line-height:1.65}
+.news-title{font-size:17px;font-weight:800;color:var(--light);line-height:1.4;margin-bottom:8px}
+.news-excerpt{font-size:13.5px;color:var(--muted);line-height:1.65}
 .news-side{display:flex;flex-direction:column;gap:12px}
-.news-sm{background:var(--white);border-radius:12px;padding:14px;border:1px solid var(--border);display:flex;gap:12px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:all .2s}
+.news-sm{background:var(--surface);border-radius:12px;padding:14px;border:0.5px solid var(--border);display:flex;gap:12px;align-items:center;transition:all .2s}
 .news-sm:hover{transform:translateX(4px);border-color:var(--accent)}
 .news-sm-icon{width:52px;height:52px;border-radius:12px;overflow:hidden;flex-shrink:0;background:var(--mid)}
 .news-sm-icon img{width:100%;height:100%;object-fit:cover}
-.news-sm-title{font-size:13px;font-weight:800;color:var(--dark);line-height:1.4;margin-bottom:3px}
+.news-sm-title{font-size:13px;font-weight:800;color:var(--light);line-height:1.4;margin-bottom:3px}
 .news-sm-date{font-size:11px;color:var(--muted);font-weight:600}
-.trophies{background:#fffbf0;border-radius:16px;padding:1.5rem;border:1px solid #ffe082;margin-top:1.5rem}
+.trophies{background:var(--surface);border-radius:16px;padding:1.5rem;border:0.5px solid var(--border);margin-top:1.5rem}
 .trophy-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.8rem}
-.trophy{display:flex;align-items:center;gap:6px;background:#fff8e1;border:1px solid #ffe082;border-radius:20px;padding:6px 14px;font-size:13px;font-weight:700;color:#e65100}
+.trophy{display:flex;align-items:center;gap:6px;background:rgba(201,168,76,.1);border:0.5px solid rgba(201,168,76,.25);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--accent)}
 </style>
 </head>
 <body>
+<div class="pieces-layer" id="pl"></div>
 <nav>
   <a href="index.html" class="nav-logo"><span class="knight">♞</span><span>ŠK Tadić</span></a>
   <div class="nav-links">
@@ -88,7 +91,7 @@
   <div class="news-grid">
     <a href="vesti/cetiri-zlata.html" class="card" style="display:block;color:inherit">
       <div class="news-main-ph">
-        <img class="news-main-img" src="https://sahklubtadic.com/wp-content/uploads/2026/05/2.jpg" alt="Četiri zlata" onerror="this.style.display='none'">
+        <img class="news-main-img" src="https://sahklubtadic.com/wp-content/uploads/2026/05/2.jpg" alt="Četiri zlata" onerror="this.parentNode.style.display='none'">
         <span class="tag tag-gold" style="position:absolute;top:12px;left:12px">Turniri</span>
       </div>
       <div class="news-body">
@@ -99,19 +102,19 @@
     </a>
     <div class="news-side">
       <a href="vesti/saradnja-jajinci.html" class="news-sm">
-        <div class="news-sm-icon"><img src="https://sahklubtadic.com/wp-content/uploads/2012/12/exit-026-150x150.jpg" alt="" onerror="this.style.background='#e8f5e9';this.parentNode.innerHTML='🤝'"></div>
+        <div class="news-sm-icon"><img src="https://sahklubtadic.com/wp-content/uploads/2012/12/exit-026-150x150.jpg" alt="" onerror="this.parentNode.innerHTML='🤝'"></div>
         <div><div class="news-sm-title">Saradnja sa OŠ Jajinci</div><div class="news-sm-date">Oktobar 2025.</div></div>
       </a>
       <a href="vesti/ruska-grupa.html" class="news-sm">
-        <div class="news-sm-icon"><img src="https://sahklubtadic.com/wp-content/uploads/2025/02/viber_image_2025-02-13_11-54-10-176-150x150.jpg" alt="" onerror="this.style.background='#e3f2fd';this.parentNode.innerHTML='🗣️'"></div>
+        <div class="news-sm-icon"><img src="https://sahklubtadic.com/wp-content/uploads/2025/02/viber_image_2025-02-13_11-54-10-176-150x150.jpg" alt="" onerror="this.parentNode.innerHTML='🗣️'"></div>
         <div><div class="news-sm-title">Nastava na ruskom jeziku</div><div class="news-sm-date">Februar 2025.</div></div>
       </a>
       <a href="vesti/blanusa-vukan.html" class="news-sm">
-        <div class="news-sm-icon"><img src="https://sahklubtadic.com/wp-content/uploads/2025/02/3-150x150.jpg" alt="" onerror="this.style.background='#f3e5f5';this.parentNode.innerHTML='♟'"></div>
+        <div class="news-sm-icon"><img src="https://sahklubtadic.com/wp-content/uploads/2025/02/3-150x150.jpg" alt="" onerror="this.parentNode.innerHTML='♟'"></div>
         <div><div class="news-sm-title">Blanuša Vukan — pobednik turnira</div><div class="news-sm-date">Februar 2025.</div></div>
       </a>
       <a href="vesti/kamp-srebrno-jezero.html" class="news-sm">
-        <div class="news-sm-icon"><img src="https://sahklubtadic.com/wp-content/uploads/2023/08/154-150x150.jpg" alt="" onerror="this.style.background='#fff8e1';this.parentNode.innerHTML='⛺'"></div>
+        <div class="news-sm-icon"><img src="https://sahklubtadic.com/wp-content/uploads/2023/08/154-150x150.jpg" alt="" onerror="this.parentNode.innerHTML='⛺'"></div>
         <div><div class="news-sm-title">Kamp Srebrno Jezero 2024</div><div class="news-sm-date">Jun 2024.</div></div>
       </a>
     </div>
@@ -133,6 +136,7 @@
 
 <footer>♛ <a href="index.html">Šah Klub Tadić</a> · Borivoja Stevanovića 51, Beograd · <a href="mailto:sahklubtadic@gmail.com">sahklubtadic@gmail.com</a> · 2026.</footer>
 <script src="nav.js"></script>
+<script src="pieces.js"></script>
 <script>
 var bg=document.getElementById('heroBg');
 for(var i=0;i<64;i++){var s=document.createElement('span');if(Math.floor(i/8+i)%2===0)s.className='d';bg.appendChild(s);}

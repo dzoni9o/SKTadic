@@ -1,36 +1,33 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="sr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="referrer" content="no-referrer">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer">
 <title>Četiri zlata — ŠK Tadić</title>
 <link rel="stylesheet" href="../style.css">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="description" content="Cetiri zlatne medalje za SK Tadic na skolskom prvenstvu Srbije u sahu, Futog 2026.">
 <style>
-.article-hero-img{width:100%;max-height:420px;object-fit:cover;border-radius:16px;margin-bottom:2rem;background:var(--mid)}
-.article-meta{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap}
-.article-title{font-size:32px;font-weight:900;color:var(--dark);line-height:1.2;margin-bottom:1rem}
-.article-body{font-size:15px;line-height:1.8;color:#333;max-width:720px}
-.article-body p{margin-bottom:1.2rem}
-.article-body h3{font-size:18px;font-weight:800;color:var(--dark);margin:1.5rem 0 .8rem}
-.article-body strong{color:var(--dark)}
-.article-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1.5rem 0}
-.article-gallery img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:10px;cursor:pointer;transition:transform .2s}
-.article-gallery img:hover{transform:scale(1.03)}
-.results-list{background:#f8f9fa;border-radius:12px;padding:1.2rem 1.5rem;margin:1rem 0;border-left:4px solid var(--accent)}
-.results-list li{margin-bottom:.5rem;font-weight:600;font-size:14px}
-.nav-between{display:flex;justify-content:space-between;margin-top:2.5rem;padding-top:1.5rem;border-top:2px solid var(--border);flex-wrap:wrap;gap:12px}
-.nav-between a{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:700;color:var(--dark);transition:all .2s}
-.nav-between a:hover{border-color:var(--accent);color:var(--accent)}
+.ah{width:100%;max-height:420px;object-fit:cover;border-radius:16px;margin-bottom:2rem}
+.am{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap}
+.at{font-size:32px;font-weight:900;color:var(--light);line-height:1.2;margin-bottom:1rem}
+.ab{font-size:15px;line-height:1.8;color:var(--muted);max-width:720px}.ab p{margin-bottom:1.2rem}
+.ab strong{color:var(--light)}.ab a{color:var(--accent)}
+.rl{background:var(--surface);border-radius:12px;padding:1.2rem 1.5rem;margin:1rem 0;border-left:3px solid var(--accent)}
+.rl li,.rl p{color:var(--muted);font-size:14px;margin-bottom:.4rem}.rl strong{color:var(--light)}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1.2rem 0}
+.ag img{width:100%;border-radius:10px;cursor:pointer;transition:transform .2s}.ag img:hover{transform:scale(1.03)}
+.nb{display:flex;justify-content:space-between;margin-top:2.5rem;padding-top:1.5rem;border-top:0.5px solid var(--border);flex-wrap:wrap;gap:12px}
+.nb a{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:700;color:var(--muted);transition:all .2s}.nb a:hover{border-color:var(--accent);color:var(--accent)}
 </style>
 </head>
 <body>
+<div class="pieces-layer" id="pl"></div>
 <nav>
   <a href="../index.html" class="nav-logo"><span class="knight">♞</span><span>ŠK Tadić</span></a>
   <div class="nav-links">
     <a href="../index.html">Početna</a>
     <a href="../skola.html">Škola</a>
-    <a href="../vesti.html" class="active">Vesti</a>
+    <a href="../vesti.html"  class="active">Vesti</a>
     <a href="../galerija.html">Galerija</a>
     <a href="../tabla.html">♟ Tabla</a>
     <a href="../kontakt.html">Kontakt</a>
@@ -40,76 +37,44 @@
 <div class="mobile-menu" id="mob">
   <a href="../index.html">🏠 Početna</a>
   <a href="../skola.html">🎓 Škola</a>
-  <a href="../vesti.html" class="active">📰 Vesti</a>
+  <a href="../vesti.html"  class="active">📰 Vesti</a>
   <a href="../galerija.html">📸 Galerija</a>
   <a href="../tabla.html">♟ Tabla</a>
   <a href="../kontakt.html">📬 Kontakt</a>
 </div>
 <div class="breadcrumb"><a href="../index.html">Početna</a><span>›</span><a href="../vesti.html">Vesti</a><span>›</span>Četiri zlata</div>
-
 <main>
-  <div class="article-meta">
-    <span class="tag tag-green">Turniri</span>
-    <span class="tag tag-gold">Vesti</span>
-    <span style="color:var(--muted);font-size:13px;font-weight:600">📅 10. maj 2026. · Futog</span>
-  </div>
-  <h1 class="article-title">Četiri zlata na članove ŠK Tadić! 🏆</h1>
-
-  <img class="article-hero-img" src="https://sahklubtadic.com/wp-content/uploads/2026/05/2.jpg" alt="Četiri zlata — školsko prvenstvo Srbije 2026" onerror="this.style.display='none'">
-
-  <div class="article-body">
-    <p><strong>Pojedinačno školsko prvenstvo Srbije u šahu – Futog, 10.05.2026.</strong></p>
+  <div class="am"><span class="tag tag-green">Turniri</span><span class="tag tag-gold">Vesti</span><span style="color:var(--muted);font-size:13px;font-weight:600">📅 10. maj 2026. · Futog</span></div>
+  <h1 class="at">Četiri zlata na članove ŠK Tadić! 🏆</h1>
+  <img class="ah" src="https://sahklubtadic.com/wp-content/uploads/2026/05/2.jpg" alt="Četiri zlata" onerror="this.style.display='none'">
+  <div class="ab"><p><strong>Pojedinačno školsko prvenstvo Srbije u šahu – Futog, 10.05.2026.</strong></p>
     <p>Članovi šahovskog kluba Tadić osvojili su <strong>četiri zlatne, jednu srebrnu i jednu bronzanu medalju</strong> na pojedinačnom školskom prvenstvu Srbije u šahu koje je održano u Futogu 10.05.2026.</p>
-
-    <h3>🥇 Prvaci Srbije u školskom šahu 2026:</h3>
-    <div class="results-list">
-      <ul style="list-style:none;padding:0">
-        <li>🥇 <strong>Životova Maja</strong> — devojčice 2. razred · 6,5/7 poena</li>
-        <li>🥇 <strong>Smilić Nina</strong> — devojčice 5. razred · 6/7 poena</li>
-        <li>🥇 <strong>Rajlić Irina</strong> — devojčice 7. razred · 6,5/7 poena</li>
-        <li>🥇 <strong>Šakotić Nikola</strong> — dečaci 7. razred · 6,5/7 poena</li>
-      </ul>
-    </div>
-
-    <h3>🥈🥉 Zapaženi rezultati:</h3>
-    <div class="results-list">
-      <ul style="list-style:none;padding:0">
-        <li>🥈 <strong>Arnaut Mina</strong> — devojčice 5. razred · 6/7 (2. mesto po dodatnom kriterijumu)</li>
-        <li>🥉 <strong>Radović Ilija</strong> — dečaci 1. razred · 5,5/7 poena</li>
-        <li>4. mesto <strong>Đekić Anika</strong> — devojčice 4. razred</li>
-        <li>4. mesto <strong>Dangubić Vukašin</strong> — dečaci 4. razred</li>
-        <li>5. mesto <strong>Đurić Andrej</strong> — dečaci 4. razred</li>
-        <li>8. mesto <strong>Vukotić Viktor</strong> — dečaci 3. razred</li>
-        <li>9. mesto <strong>Cukavac Petar</strong> — dečaci 3. razred</li>
-      </ul>
-    </div>
-
-    <div class="article-gallery">
+    <h3 style="color:var(--accent);margin:1.5rem 0 .8rem">🥇 Prvaci Srbije u školskom šahu 2026:</h3>
+    <div class="rl"><ul style="list-style:none;padding:0">
+      <li>🥇 <strong>Životova Maja</strong> — devojčice 2. razred · 6,5/7 poena</li>
+      <li>🥇 <strong>Smilić Nina</strong> — devojčice 5. razred · 6/7 poena</li>
+      <li>🥇 <strong>Rajlić Irina</strong> — devojčice 7. razred · 6,5/7 poena</li>
+      <li>🥇 <strong>Šakotić Nikola</strong> — dečaci 7. razred · 6,5/7 poena</li>
+    </ul></div>
+    <h3 style="color:var(--accent);margin:1.5rem 0 .8rem">🥈🥉 Zapaženi rezultati:</h3>
+    <div class="rl"><ul style="list-style:none;padding:0">
+      <li>🥈 <strong>Arnaut Mina</strong> — devojčice 5. razred · 6/7 (2. mesto)</li>
+      <li>🥉 <strong>Radović Ilija</strong> — dečaci 1. razred · 5,5/7 poena</li>
+      <li>4. mesto <strong>Đekić Anika</strong> — devojčice 4. razred</li>
+      <li>4. mesto <strong>Dangubić Vukašin</strong> — dečaci 4. razred</li>
+    </ul></div>
+    <div class="ag">
       <img src="https://sahklubtadic.com/wp-content/uploads/2026/05/1.jpg" alt="Životova Maja" onclick="lb(this)" onerror="this.style.display='none'">
       <img src="https://sahklubtadic.com/wp-content/uploads/2026/05/3.jpg" alt="Smilić Nina" onclick="lb(this)" onerror="this.style.display='none'">
       <img src="https://sahklubtadic.com/wp-content/uploads/2026/05/6.jpg" alt="Rajlić Irina" onclick="lb(this)" onerror="this.style.display='none'">
       <img src="https://sahklubtadic.com/wp-content/uploads/2026/05/8.jpg" alt="Radović Ilija" onclick="lb(this)" onerror="this.style.display='none'">
-      <img src="https://sahklubtadic.com/wp-content/uploads/2026/05/10.jpg" alt="Šakotić Nikola" onclick="lb(this)" onerror="this.style.display='none'">
-      <img src="https://sahklubtadic.com/wp-content/uploads/2026/05/5.jpg" alt="Devojčice 5. razred" onclick="lb(this)" onerror="this.style.display='none'">
     </div>
-
-    <p>Čestitamo svim našim učenicima na izvanrednim rezultatima i nastavljamo sa radom! ♛</p>
-  </div>
-
-  <div class="nav-between">
-    <a href="../vesti.html">← Sve vesti</a>
-    <a href="saradnja-jajinci.html">Saradnja sa OŠ Jajinci →</a>
-  </div>
+    <p>Čestitamo svim našim učenicima na izvanrednim rezultatima! ♛</p></div>
+  <div class="nb"><a href="../vesti.html">← Sve vesti</a><a href="saradnja-jajinci.html">Saradnja sa OŠ Jajinci →</a></div>
 </main>
-
-<div id="lightbox" onclick="document.getElementById('lightbox').classList.remove('open')">
-  <span id="lb-close">✕</span>
-  <img id="lb-img" src="" alt="">
-  <div id="lb-caption"></div>
-</div>
-
+<div id="lightbox" onclick="document.getElementById('lightbox').classList.remove('open')"><span id="lb-close">✕</span><img id="lb-img" src="" alt=""><div id="lb-caption"></div></div><script>function lb(img){document.getElementById('lb-img').src=img.src;document.getElementById('lb-caption').textContent=img.alt;document.getElementById('lightbox').classList.add('open');}</script>
 <footer>♛ <a href="../index.html">Šah Klub Tadić</a> · Borivoja Stevanovića 51, Beograd · <a href="mailto:sahklubtadic@gmail.com">sahklubtadic@gmail.com</a> · 2026.</footer>
 <script src="../nav.js"></script>
-<script>function lb(img){document.getElementById('lb-img').src=img.src;document.getElementById('lb-caption').textContent=img.alt;document.getElementById('lightbox').classList.add('open');}</script>
+<script src="../pieces.js"></script>
 </body>
 </html>
