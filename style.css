@@ -95,7 +95,7 @@ footer a{color:var(--accent)}
 /* GALLERY LIGHTBOX */
 #lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:999;align-items:center;justify-content:center}
 #lightbox.open{display:flex}
-#lb-img{max-width:90vw;max-height:85vh;border-radius:8px}
+#lb-img{max-width:calc(100vw - 130px);max-height:calc(100vh - 90px);border-radius:6px}
 #lb-close{position:absolute;top:20px;right:24px;font-size:36px;color:rgba(255,255,255,.6);cursor:pointer;line-height:1;font-weight:300;transition:color .2s}
 #lb-close:hover{color:var(--accent)}
 #lb-prev,#lb-next{position:absolute;top:50%;transform:translateY(-50%);font-size:48px;color:rgba(255,255,255,.6);cursor:pointer;background:rgba(255,255,255,.1);border:0.5px solid rgba(255,255,255,.25);padding:8px 14px;border-radius:8px;line-height:1;transition:all .2s}
