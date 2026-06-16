@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="sr">
 <head>
 <meta charset="UTF-8">
@@ -7,22 +7,34 @@
 <title>Galerija — ŠK Tadić</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Galerija fotografija SK Tadic — uspesi na turnirima, otvaranje kluba i kampovi.">
+<meta name="description" content="Galerija fotografija ŠK Tadić — uspesi na turnirima, otvaranje kluba i kampovi.">
 <style>
-.filter-bar{display:flex;gap:6px;margin-bottom:1.5rem;flex-wrap:wrap}
+.filter-bar{display:flex;gap:6px;margin-bottom:1.8rem;flex-wrap:wrap}
 .fbtn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:0.5px solid var(--border);background:var(--surface);color:var(--muted);transition:all .2s;font-family:'Nunito',sans-serif}
 .fbtn:hover{border-color:var(--accent);color:var(--accent)}
 .fbtn.active{background:rgba(201,168,76,.15);color:var(--accent);border-color:var(--accent)}
-.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.g-thumb{border-radius:12px;overflow:hidden;cursor:pointer;aspect-ratio:4/3;position:relative;background:var(--mid)}
-.g-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block}
-.g-thumb:hover img{transform:scale(1.07)}
-.g-thumb .overlay{position:absolute;inset:0;background:rgba(201,168,76,0);transition:background .25s;display:flex;align-items:center;justify-content:center}
-.g-thumb:hover .overlay{background:rgba(201,168,76,.15)}
+
+.album-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.album-card{background:var(--surface);border-radius:14px;border:0.5px solid var(--border);box-shadow:var(--shadow);overflow:hidden;cursor:pointer;transition:all .22s}
+.album-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 8px 32px rgba(30,48,85,.15)}
+.album-cover{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--mid)}
+.album-cover img{width:100%;height:100%;object-fit:cover;transition:transform .35s;display:block}
+.album-card:hover .album-cover img{transform:scale(1.08)}
+.album-badge{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.65);color:#fff;font-size:12px;font-weight:800;padding:3px 9px;border-radius:20px;backdrop-filter:blur(4px)}
+.album-info{padding:12px 14px 14px}
+.album-title{font-size:14px;font-weight:800;color:var(--light);line-height:1.35;margin-bottom:4px}
+.album-meta{font-size:12px;color:var(--muted);font-weight:600}
+
+#lb-album{position:absolute;top:18px;left:24px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+@media(max-width:800px){.album-grid{grid-template-columns:repeat(2,1fr);gap:12px}}
+@media(max-width:480px){.album-grid{grid-template-columns:1fr 1fr;gap:10px}.album-info{padding:10px 12px 12px}.album-title{font-size:13px}}
+@media(max-width:360px){.album-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="pieces-layer" id="pl"></div><nav>
+<div class="pieces-layer" id="pl"></div>
+<nav>
   <a href="index.html" class="nav-logo"><span class="knight">♞</span><span>ŠK Tadić</span></a>
   <div class="nav-links">
     <a href="index.html">Početna</a>
@@ -49,29 +61,182 @@
   <div class="sec-title">📸 Galerija</div>
   <div class="filter-bar">
     <button class="fbtn active" onclick="fg('sve',this)">Sve</button>
-    <button class="fbtn" onclick="fg('otvaranje',this)">🏛️ Otvaranje kluba</button>
-    <button class="fbtn" onclick="fg('turnir',this)">🏆 Turniri i uspesi</button>
+    <button class="fbtn" onclick="fg('uspesi',this)">🏆 Uspesi</button>
+    <button class="fbtn" onclick="fg('turniri',this)">♟ Turniri</button>
+    <button class="fbtn" onclick="fg('kamp',this)">🏕 Kamp</button>
+    <button class="fbtn" onclick="fg('klub',this)">🏛️ Klub</button>
   </div>
-  <div class="gallery-grid" id="gg"></div>
+  <div class="album-grid" id="ag"></div>
 </main>
-<div id="lightbox" onclick="closeLb(event)">
+
+<div id="lightbox" onclick="lbBgClick(event)">
+  <span id="lb-album"></span>
   <span id="lb-close" onclick="closeLb()">✕</span>
-  <span id="lb-prev" onclick="lbNav(-1);event.stopPropagation()">‹</span>
+  <span id="lb-prev" onclick="lbNav(-1);event.stopPropagation()">&#8249;</span>
   <img id="lb-img" src="" alt="">
-  <span id="lb-next" onclick="lbNav(1);event.stopPropagation()">›</span>
+  <span id="lb-next" onclick="lbNav(1);event.stopPropagation()">&#8250;</span>
   <div id="lb-caption"></div>
-</div><footer>♛ <a href="index.html">Šah Klub Tadić</a> · Borivoja Stevanovića 51, Beograd · <a href="mailto:sahklubtadic@gmail.com">sahklubtadic@gmail.com</a> · 2026.</footer>
+</div>
+
+<footer>♛ <a href="index.html">Šah Klub Tadić</a> · Borivoja Stevanovića 51, Beograd · <a href="mailto:sahklubtadic@gmail.com">sahklubtadic@gmail.com</a> · 2026.</footer>
 <script src="nav.js"></script>
 <script src="pieces.js"></script>
 <script>
-var imgs=[{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Zvanicno-Otvaranje-Kluba1.jpg',c:'otvaranje',t:'Zvanično otvaranje ŠK Tadić'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-4.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-5.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-6.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-7.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-8.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-9.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-10.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-11.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-12.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-13.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-14.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-15.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-16.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-17.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-18.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-20.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-21.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-22.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-24.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-26.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/05/Otvaranje-kluba-3.jpg',c:'otvaranje',t:'Otvaranje kluba'},{s:'https://sahklubtadic.com/wp-content/uploads/2026/05/2.jpg',c:'turnir',t:'Četiri zlata — školsko prvenstvo Srbije 2026'},{s:'https://sahklubtadic.com/wp-content/uploads/2025/02/3.jpg',c:'turnir',t:'Blanuša Vukan — pobednik pripremnog turnira 2025'},{s:'https://sahklubtadic.com/wp-content/uploads/2025/02/1.jpg',c:'turnir',t:'Blanuša Vukan'},{s:'https://sahklubtadic.com/wp-content/uploads/2016/11/prvaci2-e1480258480558.jpg',c:'turnir',t:'Apsolutni prvaci Pionirske lige Beograda 2016'},{s:'https://sahklubtadic.com/wp-content/uploads/2017/05/marko-1-e1494858973927.jpg',c:'turnir',t:'Ivanović Marko — školski prvak Srbije 2017'},{s:'https://sahklubtadic.com/wp-content/uploads/2016/04/Marko1.jpg',c:'turnir',t:'Marko Ivanović — kadetski prvak Beograda'},{s:'https://sahklubtadic.com/wp-content/uploads/2015/12/Perunovic.jpg',c:'turnir',t:'GM Miloš Perunović — All Stars 2015'},{s:'https://sahklubtadic.com/wp-content/uploads/2023/08/154.jpg',c:'turnir',t:'Kamp Srebrno Jezero 2024'},{s:'https://sahklubtadic.com/wp-content/uploads/2024/04/6.jpg',c:'turnir',t:'Kadetska liga Beograda 2024'},{s:'https://sahklubtadic.com/wp-content/uploads/2024/04/1.jpg',c:'turnir',t:'Školsko prvenstvo Srbije — Mladenovac 2024'},{s:'https://sahklubtadic.com/wp-content/uploads/2012/02/chess-tadza03.jpg',c:'turnir',t:'Članovi ŠK Tadić na kadetskom i juniorskom predsvenstvu'},{s:'https://sahklubtadic.com/wp-content/uploads/2016/11/tabla4.jpg',c:'turnir',t:'Gran Pri turnir'}];
-var visible=imgs.slice(),lbIdx=0;
-function buildGrid(cat){var g=document.getElementById('gg');g.innerHTML='';visible=imgs.filter(function(i){return cat==='sve'||i.c===cat;});visible.forEach(function(img,i){var d=document.createElement('div');d.className='g-thumb';d.innerHTML='<img src="'+img.s+'" alt="'+img.t+'" loading="lazy" onerror="this.parentNode.style.background='#1a1408'"><div class="overlay"></div>';d.onclick=function(){openLb(i);};g.appendChild(d);});}
-function fg(cat,btn){document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');buildGrid(cat);}
-function openLb(i){lbIdx=i;document.getElementById('lb-img').src=visible[i].s;document.getElementById('lb-caption').textContent=visible[i].t+' ('+(i+1)+'/'+visible.length+')';document.getElementById('lightbox').classList.add('open');}
-function closeLb(e){if(!e||e.target===document.getElementById('lightbox')||e.target.id==='lb-close')document.getElementById('lightbox').classList.remove('open');}
-function lbNav(d){lbIdx=(lbIdx+d+visible.length)%visible.length;openLb(lbIdx);}
-document.addEventListener('keydown',function(e){if(!document.getElementById('lightbox').classList.contains('open'))return;if(e.key==='ArrowLeft')lbNav(-1);if(e.key==='ArrowRight')lbNav(1);if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');});
+var B='https://sahklubtadic.com/wp-content/uploads/';
+var ALBUMS=[
+  {
+    id:'zlata2026',title:'Četiri zlata — Školsko prenstvo Srbije',year:2026,cat:'uspesi',
+    cover:B+'2026/05/2.jpg',
+    photos:[
+      {s:B+'2026/05/1.jpg'},{s:B+'2026/05/2.jpg'},{s:B+'2026/05/3.jpg'},
+      {s:B+'2026/05/4.jpg'},{s:B+'2026/05/5.jpg'},{s:B+'2026/05/6.jpg'},
+      {s:B+'2026/05/7.jpg'},{s:B+'2026/05/8.jpg'},{s:B+'2026/05/9.jpg'},
+      {s:B+'2026/05/10.jpg'},{s:B+'2026/05/11.jpg'}
+    ]
+  },
+  {
+    id:'blanusa2025',title:'Blanuša Vukan — Pobednik Pripremnog turnira',year:2025,cat:'turniri',
+    cover:B+'2025/02/3.jpg',
+    photos:[
+      {s:B+'2025/02/1.jpg'},{s:B+'2025/02/2.jpg'},{s:B+'2025/02/3.jpg'},
+      {s:B+'2025/02/4.jpg'},{s:B+'2025/02/viber_image_2025-02-13_11-54-10-176.jpg'}
+    ]
+  },
+  {
+    id:'bozicni2024',title:'Božićni open 64 POLJA',year:2024,cat:'turniri',
+    cover:B+'2021/11/492377768.jpg',
+    photos:[
+      {s:B+'2021/11/492377768.jpg'},
+      {s:B+'2024/12/Screenshot-2024-12-07-124424.png',t:'Rezultati'},
+      {s:B+'2024/12/Screenshot-2024-12-07-124449.png',t:'Pairings'}
+    ]
+  },
+  {
+    id:'novokadetski2024',title:'Novogodišnji kadetski rapid 64 POLJA',year:2024,cat:'turniri',
+    cover:B+'2021/11/pjimage-2020-04-08t145526-1588157392.jpg',
+    photos:[
+      {s:B+'2021/11/pjimage-2020-04-08t145526-1588157392.jpg'},
+      {s:B+'2024/12/Screenshot-2024-12-07-124832.png',t:'Rezultati'}
+    ]
+  },
+  {
+    id:'kadetska2024',title:'Kadetska liga Beograda 2024',year:2024,cat:'turniri',
+    cover:B+'2024/04/6.jpg',
+    photos:[
+      {s:B+'2024/04/1.jpg'},{s:B+'2024/04/2.jpg'},{s:B+'2024/04/3.jpg'},
+      {s:B+'2024/04/4.jpg'},{s:B+'2024/04/5.jpg'},{s:B+'2024/04/6.jpg'},
+      {s:B+'2024/04/7.jpg'}
+    ]
+  },
+  {
+    id:'kamp2024',title:'Kamp Srebrno Jezero 2024',year:2024,cat:'kamp',
+    cover:B+'2023/08/154.jpg',
+    photos:[{s:B+'2023/08/154.jpg'}]
+  },
+  {
+    id:'marko2017',title:'Ivanović Marko — Školski prvak Srbije',year:2017,cat:'uspesi',
+    cover:B+'2017/05/marko-1-e1494858973927.jpg',
+    photos:[{s:B+'2017/05/marko-1-e1494858973927.jpg'}]
+  },
+  {
+    id:'pioniri2016',title:'Apsolutni prvaci Pionirske lige Beograda',year:2016,cat:'uspesi',
+    cover:B+'2016/11/prvaci2-e1480258480558.jpg',
+    photos:[
+      {s:B+'2016/11/prvaci2-e1480258480558.jpg'},
+      {s:B+'2016/11/tabla4.jpg',t:'Gran Pri turnir'}
+    ]
+  },
+  {
+    id:'marko2016',title:'Ivanović Marko — Kadetski prvak Beograda',year:2016,cat:'uspesi',
+    cover:B+'2016/04/Marko1.jpg',
+    photos:[{s:B+'2016/04/Marko1.jpg'}]
+  },
+  {
+    id:'allstars2015',title:'GM Miloš Perunović — All Stars 2015',year:2015,cat:'turniri',
+    cover:B+'2015/12/Perunovic.jpg',
+    photos:[{s:B+'2015/12/Perunovic.jpg'}]
+  },
+  {
+    id:'kadetskojuniorsko2012',title:'Kadetsko i Juniorsko prenstvo Beograda',year:2012,cat:'turniri',
+    cover:B+'2012/02/chess-tadza03-e1355417105312.jpg',
+    photos:[{s:B+'2012/02/chess-tadza03-e1355417105312.jpg'}]
+  },
+  {
+    id:'otvaranje2012',title:'Zvanično otvaranje ŠK Tadić',year:2012,cat:'klub',
+    cover:B+'2012/05/Zvanicno-Otvaranje-Kluba1.jpg',
+    photos:[
+      {s:B+'2012/05/Zvanicno-Otvaranje-Kluba1.jpg'},{s:B+'2012/05/Otvaranje-kluba-3.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-4.jpg'},{s:B+'2012/05/Otvaranje-kluba-5.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-6.jpg'},{s:B+'2012/05/Otvaranje-kluba-7.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-8.jpg'},{s:B+'2012/05/Otvaranje-kluba-9.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-10.jpg'},{s:B+'2012/05/Otvaranje-kluba-11.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-12.jpg'},{s:B+'2012/05/Otvaranje-kluba-13.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-14.jpg'},{s:B+'2012/05/Otvaranje-kluba-15.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-16.jpg'},{s:B+'2012/05/Otvaranje-kluba-17.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-18.jpg'},{s:B+'2012/05/Otvaranje-kluba-20.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-21.jpg'},{s:B+'2012/05/Otvaranje-kluba-22.jpg'},
+      {s:B+'2012/05/Otvaranje-kluba-24.jpg'},{s:B+'2012/05/Otvaranje-kluba-26.jpg'}
+    ]
+  }
+];
+
+var curAlbum=null,curIdx=0;
+
+function pluralFoto(n){return n+' '+(n===1?'fotografija':'fotografija');}
+
+function buildGrid(cat){
+  var ag=document.getElementById('ag');
+  ag.innerHTML='';
+  var list=ALBUMS.filter(function(a){return cat==='sve'||a.cat===cat;});
+  list.forEach(function(album){
+    var d=document.createElement('div');
+    d.className='album-card';
+    d.innerHTML='<div class="album-cover"><img src="'+album.cover+'" alt="'+album.title+'" loading="lazy" onerror="this.style.opacity=0"><span class="album-badge">&#128247; '+album.photos.length+'</span></div><div class="album-info"><div class="album-title">'+album.title+'</div><div class="album-meta">'+album.year+' &middot; '+pluralFoto(album.photos.length)+'</div></div>';
+    d.onclick=function(){openAlbum(album,0);};
+    ag.appendChild(d);
+  });
+}
+
+function fg(cat,btn){
+  document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  buildGrid(cat);
+}
+
+function openAlbum(album,idx){
+  curAlbum=album;
+  curIdx=idx||0;
+  document.getElementById('lb-album').textContent=album.title+' · '+album.year;
+  showPhoto();
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function showPhoto(){
+  var p=curAlbum.photos[curIdx];
+  document.getElementById('lb-img').src=p.s;
+  var hasMult=curAlbum.photos.length>1;
+  var cap=(hasMult?(curIdx+1)+' / '+curAlbum.photos.length:'')+(p.t?' — '+p.t:'');
+  document.getElementById('lb-caption').textContent=cap;
+  document.getElementById('lb-prev').style.display=hasMult?'':'none';
+  document.getElementById('lb-next').style.display=hasMult?'':'none';
+}
+
+function lbNav(d){
+  curIdx=(curIdx+d+curAlbum.photos.length)%curAlbum.photos.length;
+  showPhoto();
+}
+
+function closeLb(){document.getElementById('lightbox').classList.remove('open');}
+
+function lbBgClick(e){if(e.target===document.getElementById('lightbox'))closeLb();}
+
+document.addEventListener('keydown',function(e){
+  if(!document.getElementById('lightbox').classList.contains('open'))return;
+  if(e.key==='ArrowLeft')lbNav(-1);
+  else if(e.key==='ArrowRight')lbNav(1);
+  else if(e.key==='Escape')closeLb();
+});
+
 buildGrid('sve');
 </script>
 </body>
